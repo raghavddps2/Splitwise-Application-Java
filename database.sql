@@ -1,0 +1,1 @@
+create table users(username varchar(100) PRIMARY KEY,name varchar(100),email varchar(100),password varchar(100),mobile varchar(100));
