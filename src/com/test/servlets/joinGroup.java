@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jasper.tagplugins.jstl.core.Set;
 
 import com.test.beans.Group;
 import com.test.dao.ApplicationDao;
@@ -73,7 +71,7 @@ public class joinGroup extends HttpServlet {
 			}
 			else {
 				request.setAttribute("message","You are added to the group, It will be visible on your dashboard now");
-				request.getRequestDispatcher("html/profile.jsp").forward(request,response);
+				request.getRequestDispatcher("profile").forward(request,response);
 			}
 		}
 	}

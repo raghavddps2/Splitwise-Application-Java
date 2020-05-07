@@ -47,8 +47,7 @@ public class CreateGroup extends HttpServlet {
 		String groupName = request.getParameter("name");
 		String description = request.getParameter("description");
 		String groupCreatedDate = formatter.format(date).toString();
-		String groupId = groupName + groupCreatedDate.hashCode();
-		groupId = groupId.replace("-","");
+		String groupId = Integer.toString(groupCreatedDate.hashCode());
 		String groupOwner = (String) request.getSession().getAttribute("username");
 		//forming the group parameters.
 		//forming the object.
@@ -63,7 +62,7 @@ public class CreateGroup extends HttpServlet {
 			String message = "Group created successfully! GIve you friends groupId: "+groupId+" so that they can join";
 			request.setAttribute("message",message);
 		}
-		request.getRequestDispatcher("html/profile.jsp").forward(request, response);
+		request.getRequestDispatcher("profile").forward(request, response);
 	}
 
 }

@@ -1,12 +1,12 @@
 package com.test.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //import org.graalvm.compiler.lir.LIRInstruction.Use;
@@ -118,6 +118,18 @@ public int createUserGroupTable(String username) {
 			statement3.setString(1,group.getGroupOwner());
 			statement3.executeUpdate();
 			
+			
+			Statement statement4 = connection.createStatement();
+			String tableName2 = group.getGroupId()+"transactions";
+			String sql4 = "create table "+tableName2+" (trans_id varchar(100) PRIMARY KEY, transTime varchar(100),"
+					+ "transDoneBy varchar(100),transGroup varchar(100),transMoney double,transDescription varchar(100),transName varchar(100))";
+			statement4.executeUpdate(sql4);
+			
+			Statement statement5 = connection.createStatement();
+			String tableName3 = group.getGroupId()+"transactionMemberDetails";
+			String sql5 = "create table "+tableName3+"(id INTEGER PRIMARY KEY AUTO_INCREMENT,trans_id varchar(100),member_username varchar(100))";
+			statement5.executeUpdate(sql5);
+		
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -224,19 +236,132 @@ public int createUserGroupTable(String username) {
 			e.printStackTrace();
 		}
 		return map;
+	}
+	
+	public ArrayList<String> getGroupMembers(String groupId){
+		System.out.println(groupId+"testing123");
+		ArrayList<String> groupMembers = new ArrayList<String>();
+		try {
+			Connection connection = DBConnection.getConnectionToDatabase();
+			String tableName = 	groupId+"members";
+			String selectQuery = "select * from "+ tableName; 
+			Statement statement = connection.createStatement();
+			ResultSet set = statement.executeQuery(selectQuery);
+			
+			while(set.next()) {
+				groupMembers.add(set.getString("members"));
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return groupMembers;
+
+	}
+	
+	public int addTransactionToDatabase(Transaction transaction) {
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		int ans = 0;
+		try {
+			Connection connection = DBConnection.getConnectionToDatabase();
+			String tableName1 = transaction.getGroupId()+"transactions";
+PreparedStatement pstmt = connection.prepareStatement("INSERT INTO "+tableName1+"(trans_id,transTime,transDoneBy,transGroup,transMoney,transDescription,transName) VALUES (?, ?, ?, ?, ?,?,?)");
+			
+			//Setting the values.
+			pstmt.setString(1,transaction.getTransactionId());
+			pstmt.setString(2,transaction.getTime());
+			pstmt.setString(3,transaction.getDoneBy());
+			pstmt.setString(4,transaction.getGroupId());
+			pstmt.setDouble(5,transaction.getMoney());
+			pstmt.setString(6,transaction.getTransactionDescription());
+			pstmt.setString(7, transaction.getTransactionFor());
+			
+			//Executing the query.
+			ans = pstmt.executeUpdate();			
+			String tableName2 = transaction.getGroupId()+"transactionMemberDetails";
+			PreparedStatement pstmt1 = connection.prepareStatement("INSERT INTO "+tableName2+"(trans_id,member_username) VALUES (?, ?)");
+
+			for(String member: transaction.getMembersInvolved()) {
+				pstmt1.setString(1,transaction.getTransactionId());
+				pstmt1.setString(2,member);
+				pstmt1.executeUpdate();
+			}
+			ans = 1;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return ans;
 		
 	}
 	
+	
+	
+	public Group getGroupDetails(String groupId)
+	{	
+		Group group = new Group();
+		try {
+			String tableName  = "groups";
+			Connection connection = DBConnection.getConnectionToDatabase();
+			String sql = "select * from "+tableName+ " where groupId = '"+groupId+"'";
+			Statement statement = connection.createStatement();
+			ResultSet set = statement.executeQuery(sql);
+			
+			if(set.next()) {
+					group.setGroupId(groupId);
+					group.setGroupCreatedDate(set.getString("groupDate"));
+					group.setGroupName(set.getString("groupName"));
+					group.setGroupOwner(set.getString("groupOwner"));
+					group.setGroupDescription(set.getString("groupDescription"));
+			}
+			else {
+				//
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return group;
+	}
+	
+	
+	public ArrayList<Transaction> getTransactionDetails(String groupId){
+
+		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+		try {
+			Connection connection = DBConnection.getConnectionToDatabase();
+			String tableName = groupId+"transactions";
+			String selectQuery = "select * from "+ tableName; 
+			Statement statement = connection.createStatement();
+			ResultSet set = statement.executeQuery(selectQuery);
+			System.out.println("gettong trans");
+			while(set.next()) {
+				Transaction transaction =new Transaction();
+				transaction.setTransactionId(set.getString("trans_id"));
+				transaction.setTime(set.getString("transTime"));
+				transaction.setDoneBy(set.getString("transDoneBy"));
+				transaction.setGroupId(set.getString("transGroup"));
+				transaction.setMoney(set.getDouble("transMoney"));
+				transaction.setTransactionDescription(set.getString("transDescription"));
+				transaction.setTransactionFor(set.getString("transName"));
+				ArrayList<String> members = new ArrayList<String>();
+				Statement statement1 = connection.createStatement();
+				String tableName1 = groupId+"transactionMemberDetails";
+				String selectQuery1 = "select * from "+tableName1+" where trans_id like '%"+transaction.getTransactionId()+"%'";
+				
+				ResultSet set1 = statement1.executeQuery(selectQuery1);
+				while(set1.next()) {
+					members.add(set1.getString("member_username"));
+				}	
+				transaction.setMembersInvolved(members);
+				transactions.add(transaction);
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return transactions;
+
+	}
+
 }

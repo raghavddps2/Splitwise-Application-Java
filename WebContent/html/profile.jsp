@@ -16,10 +16,10 @@
 	%>
 	<h1>Hello ${username}</h1>
 	
-	<button><a href="logout">Logout</a></button>
+	<a href="logout"><button>Logout</button></a>
 
-	<button><a href="createGroup">Create A Group</a></button>
-	<button><a href="joinGroup">Join A Group</a></button>
+	<a href="createGroup"><button>Create A Group</button></a>
+	<a href="joinGroup"><button>Join A Group</button></a>
 	
 	<h2>Groups created by you</h2>
 	
@@ -41,7 +41,7 @@
       <td><%= group.getGroupId() %></td>
       <td><%= group.getGroupName() %></td>
       <td><%= group.getGroupCreatedDate() %></td>
-      <td><button type="submit">Add or View Transactions</button></td>
+      <td><a href="groupDetails?groupId=<%= group.getGroupId() %>"><button>Open Group Details</button></a></td>
     </tr>
     <%
 		}
@@ -73,7 +73,8 @@
       <td><%= group.getGroupName() %></td>
       <td><%= group.getGroupCreatedDate() %></td>
        <td><%= group.getGroupOwner() %></td>
-      <td><button type="submit">Add or View Transactions</button></td>
+           <td><a href="groupDetails?groupId=<%= group.getGroupId() %>"><button>Open Group Details</button></a></td>
+  
     </tr>
     <%
 		}
