@@ -1,3 +1,4 @@
+--Execute this before starting the project.
 create database project3;
 use project3;
 create table users(
