@@ -408,5 +408,48 @@ PreparedStatement pstmt = connection.prepareStatement("INSERT INTO "+tableName1+
 		return ans;
 		
 	}
-
+	
+	
+	public ArrayList<MoneyStatus> getMoneyStatus(String groupId){
+	
+		ArrayList<MoneyStatus> status = new ArrayList<MoneyStatus>();
+		try {
+			Connection connection = DBConnection.getConnectionToDatabase();
+			String tableName4 = groupId+"moneyStatus";
+			String selectQuery = "select * from "+ tableName4; 
+			Statement statement = connection.createStatement();
+			ResultSet set = statement.executeQuery(selectQuery);
+			while(set.next()) {
+				MoneyStatus moneyStatus = new MoneyStatus();
+				moneyStatus.setMember_name(set.getString("member_name"));
+				moneyStatus.setMoney_lend(set.getDouble("money_lend"));
+				moneyStatus.setMoney_owed(set.getDouble("money_owed"));
+				status.add(moneyStatus);
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return status;
+		
+	}
+	
+	public int settleUp(String groupId) {
+		int ans = 0;
+		try {
+		String tableName4 = groupId+"moneyStatus";
+		Connection connection  = DBConnection.getConnectionToDatabase();
+		Statement statement = connection.createStatement();
+		String sql = "UPDATE "+tableName4+" SET money_lend = 0,money_owed = 0";
+			statement.executeUpdate(sql);
+			ans = 1;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			ans = 0;
+		}
+	
+		return ans;
+	}
+	
 }

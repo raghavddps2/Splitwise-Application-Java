@@ -227,6 +227,10 @@ $color_grey_dark: #a2a2a2;
 	<h1>Group details for: <%= request.getAttribute("groupId") %></h1>
 	<a href="addTransaction?groupId=<%= request.getAttribute("groupId") %>"><button>Add Expense</button></a>
 	
+	<a href="settleUp?groupId=<%= request.getAttribute("groupId") %>&groupOwner=<%= request.getAttribute("groupOwner") %>">
+		<button>Settle Up and View the Money Distribution</button>
+	</a>
+	
 	<h2>Group Details</h2>
 	<div>
 		

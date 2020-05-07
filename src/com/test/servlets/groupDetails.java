@@ -48,6 +48,7 @@ public class groupDetails extends HttpServlet {
 		}
 		request.setAttribute("groupDetails",group);
 		request.setAttribute("members",members);
+		request.setAttribute("groupOwner",group.getGroupOwner());
 		request.setAttribute("transactions",transactions);
 		request.setAttribute("groupId",groupId);
 		request.getRequestDispatcher("html/groupDetails.jsp").forward(request, response);
