@@ -47,7 +47,7 @@ public class CreateGroup extends HttpServlet {
 		String groupName = request.getParameter("name");
 		String description = request.getParameter("description");
 		String groupCreatedDate = formatter.format(date).toString();
-		String groupId = Integer.toString(groupCreatedDate.hashCode());
+		String groupId = Integer.toString(groupCreatedDate.hashCode()).replaceAll("-","");
 		String groupOwner = (String) request.getSession().getAttribute("username");
 		//forming the group parameters.
 		//forming the object.

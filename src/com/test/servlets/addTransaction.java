@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+import com.test.beans.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,6 +46,26 @@ public class addTransaction extends HttpServlet {
 		}
 		request.setAttribute("groupId",groupId);
 		request.getRequestDispatcher("html/addExpense.jsp").forward(request, response);
+	}
+	
+	protected ArrayList<MoneyStatus> setMoneyStatus(double money,ArrayList<String> membersInvolved,String username){
+		
+		ArrayList<MoneyStatus> status = new ArrayList<MoneyStatus>();
+		double eachDistribution = money/membersInvolved.size();
+		for(String member: membersInvolved) {
+			MoneyStatus moneyStatus = new MoneyStatus();
+			moneyStatus.setMember_name(member);
+			if(member.equals(username)) {
+				moneyStatus.setMoney_lend(money-eachDistribution);
+				moneyStatus.setMoney_owed(0);
+			}
+			else {
+				moneyStatus.setMoney_lend(0);
+				moneyStatus.setMoney_owed(eachDistribution);
+			}
+			status.add(moneyStatus);
+		}
+		return status;
 	}
 
 	/**
@@ -93,11 +113,15 @@ public class addTransaction extends HttpServlet {
 		System.out.println(groupId);
 		Transaction transaction = new Transaction(name,Description,groupId,transId,transDate,transactionMembers,Money,username);
 		int ans = dao.addTransactionToDatabase(transaction);
+
+		ArrayList<MoneyStatus> status = setMoneyStatus(Money,transactionMembers,username);
+		ans = dao.setMoneyStatusTable(status,groupId);
 		if(ans == 0) {
 			request.setAttribute("message","There is some error. Please try again");
 			request.getRequestDispatcher("profile").forward(request, response);
 		}
 		else {
+			
 			request.setAttribute("groupId",groupId);
 			request.setAttribute("message","Expense Added succeffully!. You can see it in the logs below");
 			request.getRequestDispatcher("groupDetails").forward(request, response);

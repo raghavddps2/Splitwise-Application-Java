@@ -130,6 +130,19 @@ public int createUserGroupTable(String username) {
 			String sql5 = "create table "+tableName3+"(id INTEGER PRIMARY KEY AUTO_INCREMENT,trans_id varchar(100),member_username varchar(100))";
 			statement5.executeUpdate(sql5);
 		
+			Statement statement6 = connection.createStatement();
+			String tableName4 = group.getGroupId()+"moneyStatus";
+			String sql6 = "create table "+tableName4 + "(id INTEGER PRIMARY KEY AUTO_INCREMENT,member_name varchar(100),money_lend double,money_owed double)";
+			statement6.executeUpdate(sql6);
+			
+			String sql7 = "insert into "+tableName4+"(member_name,money_lend,money_owed) values(?,?,?)"; 
+			java.sql.PreparedStatement statement7 = connection.prepareStatement(sql7);
+			statement7.setString(1,group.getGroupOwner());
+			statement7.setDouble(2, 0);
+			statement7.setDouble(3,0);
+			statement7.executeUpdate();
+			
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -162,6 +175,14 @@ public int createUserGroupTable(String username) {
 			statement2.setString(4,group.getGroupOwner());
 			ans = statement2.executeUpdate();
 			ans = 1;
+			
+			String tableName4 = group.getGroupId()+"moneyStatus";
+			String sql7 = "insert into "+tableName4+"(member_name,money_lend,money_owed) values(?,?,?)"; 
+			java.sql.PreparedStatement statement7 = connection.prepareStatement(sql7);
+			statement7.setString(1,joinee);
+			statement7.setDouble(2, 0);
+			statement7.setDouble(3,0);
+			statement7.executeUpdate();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -362,6 +383,30 @@ PreparedStatement pstmt = connection.prepareStatement("INSERT INTO "+tableName1+
 		}
 		return transactions;
 
+	}
+	
+	
+	public int setMoneyStatusTable(ArrayList<MoneyStatus> status,String groupId){
+		int ans = 0;
+		try {
+			String tableName4 = groupId+"moneyStatus";
+			Connection connection  = DBConnection.getConnectionToDatabase();
+			Statement statement = connection.createStatement();
+			for(MoneyStatus moneyStatus: status) {
+				double money_owed = moneyStatus.getMoney_owed();
+				double money_lend = moneyStatus.getMoney_lend();
+				String member = moneyStatus.getMember_name();
+				String sql = "UPDATE "+tableName4+" SET money_lend = money_lend + "+money_lend+",money_owed = money_owed+"+money_owed+" where member_name like '%"+member+"%'";
+		      statement.executeUpdate(sql);
+			ans = 1;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			ans = 0;
+		}
+		return ans;
+		
 	}
 
 }
