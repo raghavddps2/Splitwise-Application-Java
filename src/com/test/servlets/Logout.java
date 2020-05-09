@@ -28,9 +28,11 @@ public class Logout extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+	
 		HttpSession session = request.getSession();
+		session.setAttribute("username",null);
 		session.invalidate();
-		request.getRequestDispatcher("/html/index.html").forward(request, response);;
+		request.getRequestDispatcher("index").forward(request, response);
 	}
 
 	/**
@@ -38,7 +40,10 @@ public class Logout extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+
+		HttpSession session = request.getSession();
+		session.invalidate();
+		request.getRequestDispatcher("index").forward(request, response);
 	}
 
 }

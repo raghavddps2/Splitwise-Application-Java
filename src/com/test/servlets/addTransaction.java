@@ -35,6 +35,10 @@ public class addTransaction extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getSession(false) == null) {
+			request.setAttribute("message","Login or register first");
+			request.getRequestDispatcher("login").forward(request, response);
+		}
 		ApplicationDao dao = new ApplicationDao();
 		String groupId = request.getParameter("groupId");
 		System.out.print(groupId+"hiii");

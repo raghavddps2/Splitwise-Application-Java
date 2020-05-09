@@ -33,6 +33,12 @@ public class groupDetails extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getSession(false) == null) {
+			request.setAttribute("message","Login or register first");
+			request.getRequestDispatcher("login").forward(request, response);
+		}
+		System.out.print(request.getSession().getAttribute("username")+"holla");
+		
 		String groupId = request.getParameter("groupId");
 		ApplicationDao dao = new ApplicationDao();
 		/**

@@ -83,12 +83,21 @@ public class SettleUp extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getSession(false) == null) {
+			request.setAttribute("message","Login or register first");
+			request.getRequestDispatcher("login").forward(request, response);
+		}
+		
 		ApplicationDao dao = new ApplicationDao();
 		String groupId = request.getParameter("groupId");
 		String groupOwner = request.getParameter("groupOwner");
 		ArrayList<MoneyStatus> status = dao.getMoneyStatus(groupId);
 		ArrayList<CashFlowDisplay> ans = settleCash(status);
 		request.setAttribute("settlement",ans);
+		System.out.print(ans.size()+"**");
+		for(CashFlowDisplay i:ans) {
+			System.out.print(i.getMoney());
+		}
 		request.setAttribute("groupId",groupId);
 		request.setAttribute("groupOwner",groupOwner);
 		request.getRequestDispatcher("html/settleUp.jsp").forward(request, response);

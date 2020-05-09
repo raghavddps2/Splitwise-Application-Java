@@ -35,6 +35,10 @@ public class joinGroup extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		if(request.getSession(false) == null) {
+			request.setAttribute("message","Login or register first");
+			request.getRequestDispatcher("login").forward(request, response);
+		}
 		request.getRequestDispatcher("html/joinGroup.jsp").forward(request, response);
 	}
 
