@@ -70,7 +70,8 @@
 
         i) Poor GUI (The graphical user interface needs development with proper buttons to route user accordingly) and the within application routing is not user friendly.
 
-        ii) Login functionality uses sessions, and sometimes session invalidates but session attributes are not lost - To be fixed. (So, for current purposes, either login again(which changes the session attributes), or use different browsers.)
+        ii) Login functionality uses sessions, and sometimes session invalidates but session 
+        attributes are not lost - To be fixed. (So, for current purposes, either login again(which changes the session     attributes), or use different browsers.)
 
         iii) Algorithmic Approach to money split can be improved and can be brought down to O(max(m,n)), where m and n are as specified above.
 
