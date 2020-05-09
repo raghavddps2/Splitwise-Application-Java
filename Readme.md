@@ -78,7 +78,7 @@
             The code contains a lot of print statement, that were written while developing the application, they have not been removed yet.
     
     8. Contributors: 
-            Rohit Nagraj (1MS17IS096)
+            Rohit Nagraj (1MS17IS094)
             Raghav Maheshwari (1MS17IS086)
 
     
