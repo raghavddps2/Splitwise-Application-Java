@@ -33,7 +33,10 @@ public class Profile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.print("hiiiii");
+		if(request.getSession(false) == null ) {
+			request.setAttribute("message","Login or register first");
+			request.getRequestDispatcher("login").forward(request, response);
+		}
 		String message = (String)request.getAttribute("message");
 		request.setAttribute("message",message);
 		String username = (String) request.getSession().getAttribute("username");
@@ -47,16 +50,7 @@ public class Profile extends HttpServlet {
 		ArrayList<Group> user_joined_grp = groups.get("groups_joined_by_user");
 		request.setAttribute("user_made_grp",user_made_grp);
 		request.setAttribute("user_joined_grp",user_joined_grp);
-//		Iterator iterator = user_made_grp.iterator();
-//		while(iterator.hasNext()) {
-//			Group grp = (Group) iterator.next();
-//			System.out.println(grp.getGroupId());
-//		}
-//		Iterator iterator2 = user_made_grp.iterator();
-//		while(iterator2.hasNext()) {
-//			Group grp = (Group) iterator2.next();
-//			System.out.println(grp.getGroupId());
-//		}
+//		
 		request.getRequestDispatcher("html/profile.jsp").forward(request, response);
 	}
 
